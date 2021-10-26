@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using SampleWebApi.Controllers.Issue96;
 using SampleWebApi.DbModels;
 using SampleWebApi.ValidatorFactories;
 using Swashbuckle.AspNetCore.Swagger;
@@ -105,6 +106,9 @@ namespace SampleWebApi
             //        context.Schema.Properties[context.PropertyKey].Pattern = regularExpressionValidator.Expression;
             //    }
             //});
+
+            // Add services for Issue96
+            services.AddIssue96();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
