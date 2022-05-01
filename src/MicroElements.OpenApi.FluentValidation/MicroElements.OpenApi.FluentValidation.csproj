@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>9.0</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="[10.0.0, 11)" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
+        <PackageReference Include="Microsoft.OpenApi" Version="1.1.4" />
+        <PackageReference Include="MicroElements.Metadata" Version="7.12.0" />
+    </ItemGroup>
+    
+</Project>
