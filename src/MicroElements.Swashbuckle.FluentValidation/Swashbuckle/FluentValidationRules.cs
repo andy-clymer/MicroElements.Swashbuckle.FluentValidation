@@ -2,9 +2,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using FluentValidation;
+using MicroElements.Metadata;
+using MicroElements.Metadata.JsonSchema;
+using MicroElements.Metadata.Schema;
 using MicroElements.Swashbuckle.FluentValidation.Generation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -99,6 +103,8 @@ namespace MicroElements.Swashbuckle.FluentValidation
             if (validator == null)
                 return;
 
+            GenerateSchema(schema, context);
+
             var schemaProvider = new SwashbuckleSchemaProvider(context.SchemaRepository, context.SchemaGenerator, _schemaGenerationSettings.SchemaIdSelector);
 
             var schemaContext = new SchemaGenerationContext(
@@ -118,6 +124,29 @@ namespace MicroElements.Swashbuckle.FluentValidation
             catch (Exception e)
             {
                 _logger.LogWarning(0, e, $"Applying IncludeRules for type '{context.Type}' fails.");
+            }
+        }
+
+        private ConcurrentDictionary<Type, ISchema> _schemas = new ConcurrentDictionary<Type, ISchema>();
+
+        private void GenerateSchema(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            var schemaType = context.Type;
+            var properties = schema.Properties;
+            if (schema.Type == "object")
+            {
+                if (context.SchemaRepository.TryLookupByType(schemaType, out var schemaRef) && schemaRef.Reference.Id is { } schemaName)
+                {
+                    var objectSchema = new MutableObjectSchema(name: schemaName, type: schemaType);
+                    _schemas[schemaType] = objectSchema;
+
+                    foreach (var schemaForProperty in properties)
+                    {
+                        var valueType = schemaForProperty.Value.Type;
+                        //JsonTypeMapper.Instance.GetTypeName()
+                        objectSchema.AddProperty(Property.Create(type: typeof(string), schemaForProperty.Key));
+                    }
+                }
             }
         }
 

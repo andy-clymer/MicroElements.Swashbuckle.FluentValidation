@@ -1,3 +1,6 @@
+# UNREALESED
+* Migrated to netstandard2.1 because package is for net core only
+
 # Changes in 5.5.0:
 * Sets min compatibility to Swashbuckle.AspNetCore 6.3.0. (PR#102 by guimabdo)
 
